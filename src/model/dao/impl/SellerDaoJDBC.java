@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SellerDaoJDBC implements SellerDao {
@@ -21,7 +22,6 @@ public class SellerDaoJDBC implements SellerDao {
     }
 
     public SellerDaoJDBC() {
-
     }
 
     @Override
@@ -53,16 +53,8 @@ public class SellerDaoJDBC implements SellerDao {
             st.setInt(1, id);
             rs = st.executeQuery();
             if(rs.next()){
-                Department dep = new Department();
-                dep.setId(rs.getInt("DepartmentId"));
-                dep.setName(rs.getString("depName"));
-                Seller obj = new Seller();
-                obj.setId(rs.getInt("Id"));
-                obj.setName(rs.getString("Name"));
-                obj.setEmail(rs.getString("Email"));
-                obj.setBirthDate(rs.getDate("BirthDate"));
-                obj.setBaseSalary(rs.getDouble("BaseSalary"));
-                obj.setDepartment(dep);
+                Department dep = instantiateDepartment(rs);
+                Seller obj = instantiateSeller(rs, dep);
                 return obj;
             }
         } catch (SQLException e) {
@@ -72,6 +64,53 @@ public class SellerDaoJDBC implements SellerDao {
             DB.closeResultSet(rs);
         }
         return null;
+    }
+
+    public List<Seller> findByDepartment(Department department){
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try{
+            st = conn.prepareStatement(
+                    "SELECT seller.*,department.Name as depName "
+                            + "FROM seller INNER JOIN department "
+                            +"ON seller.DepartmentId = department.Id "
+                            +"WHERE DepartmentId = ? "
+                            +"ORDER BY Name");
+
+            st.setInt(1, department.getId());
+            List<Seller> list = new ArrayList<>();
+            rs = st.executeQuery();
+            while(rs.next()){
+                Seller obj = instantiateSeller(rs, department);
+                list.add(obj);
+            }
+            return list;
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        }finally{
+            DB.closeStatement(st);
+            DB.closeResultSet(rs);
+        }
+    }
+
+
+
+    private Seller instantiateSeller(ResultSet rs, Department dep) throws SQLException{
+        Seller obj = new Seller();
+        obj.setId(rs.getInt("Id"));
+        obj.setName(rs.getString("Name"));
+        obj.setEmail(rs.getString("Email"));
+        obj.setBirthDate(rs.getDate("BirthDate"));
+        obj.setBaseSalary(rs.getDouble("BaseSalary"));
+        obj.setDepartment(dep);
+        return obj;
+    }
+
+    private Department instantiateDepartment(ResultSet rs) throws SQLException {
+        Department dep = new Department();
+        dep.setId(rs.getInt("DepartmentId"));
+        dep.setName(rs.getString("depName"));
+        return dep;
     }
 
     @Override
