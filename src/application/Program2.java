@@ -18,16 +18,27 @@ public class Program2 {
         System.out.println();
 
         System.out.println("==== TEST 2: department findAll ====");
-        List<Department> departments;
-        for (Department dep : departments = departmentDao.findAll()) {
+        List<Department> departments = departmentDao.findAll();
+        for (Department dep : departments) {
             System.out.println(dep);
         }
         System.out.println();
+        System.out.println("==== TEST 3: department insert ====");
+        department.setId(5);
+        department.setName("Jewelry");
+        departmentDao.insert(department);
+        System.out.println(departmentDao.findById(5));
+        System.out.println();
 
-       /*
+        System.out.println("==== TEST 4: department update ====");
+        System.out.println("Before update: ");
+        department = departmentDao.findById(6);
+        System.out.println(departmentDao.findById(6));
+        System.out.println("After update: ");
+        department.setName("Cosmetics");
+        departmentDao.update(department);
+        System.out.println(departmentDao.findById(6));
 
-        Department department = new Department(7,"Food");
-        departmentDao.insert(department);*/
-
+        sc.close();
     }
 }
