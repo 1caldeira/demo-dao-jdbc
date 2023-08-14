@@ -43,6 +43,13 @@ public class Program2 {
         int id = sc.nextInt();
         departmentDao.deleteById(id);
         System.out.println("Department successfully deleted!");
+        System.out.println();
+        System.out.println("================Bonus feature================");
+        System.out.println("==== TEST 6: find department by name ====");
+        System.out.print("Enter department name: ");
+        sc.nextLine();
+        String name = sc.nextLine();
+        System.out.println("Department found!\n"+departmentDao.findByName(name));
 
         sc.close();
     }

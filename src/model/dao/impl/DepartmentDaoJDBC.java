@@ -133,6 +133,29 @@ public class DepartmentDaoJDBC implements DepartmentDao {
             DB.closeResultSet(rs);
         }
     }
+@Override
+    public Department findByName(String name) {
+    PreparedStatement st = null;
+    ResultSet rs = null;
+    try{
+        st = conn.prepareStatement(
+                "SELECT department.*"
+                        +"FROM department "
+                        +"WHERE Name = ?");
+
+        st.setString(1, name);
+        rs = st.executeQuery();
+        if(rs.next()){
+            return instantiateDepartment(rs);
+        }
+    } catch (SQLException e) {
+        throw new DbException(e.getMessage());
+    }finally{
+        DB.closeStatement(st);
+        DB.closeResultSet(rs);
+    }
+    return null;
+    }
 
     private Department instantiateDepartment(ResultSet rs) throws SQLException {
         Department dep = new Department();
@@ -140,10 +163,4 @@ public class DepartmentDaoJDBC implements DepartmentDao {
         dep.setName(rs.getString("Name"));
         return dep;
     }
-
-    public Department findByName(String name) {
-        return null;
-    }
-
-
 }
