@@ -24,11 +24,10 @@ public class Program2 {
         }
         System.out.println();
         System.out.println("==== TEST 3: department insert ====");
-        /*department.setId(5);
-        department.setName("Jewelry");
+        department = new Department(null, "Gardening");
         departmentDao.insert(department);
-        System.out.println(departmentDao.findById(5));
-        System.out.println();*/
+        System.out.println("New department successfully inserted: "+department);
+        System.out.println();
 
         System.out.println("==== TEST 4: department update ====");
         System.out.println("Before update: ");
@@ -39,12 +38,11 @@ public class Program2 {
         System.out.println("After update: ");
         System.out.println(departmentDao.findById(3));
         System.out.println();
-        System.out.println("==== TEST 4: department delete ====");
+        System.out.println("==== TEST 5: department delete ====");
         System.out.print("Enter a department ID to be deleted: ");
         int id = sc.nextInt();
         departmentDao.deleteById(id);
-        System.out.println("Department deleted successfully!");
-        System.out.println();
+        System.out.println("Department successfully deleted!");
 
         sc.close();
     }
