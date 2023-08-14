@@ -60,9 +60,10 @@ public class SellerDaoJDBC implements SellerDao {
         PreparedStatement st = null;
         try{
             st = conn.prepareStatement(
-                    "UPDATE seller\n"
-                            + "SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ?\n"
-                            + "WHERE Id = ?", Statement.RETURN_GENERATED_KEYS);
+                    """
+                            UPDATE seller
+                            SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ?
+                            WHERE Id = ?""", Statement.RETURN_GENERATED_KEYS);
             st.setString(1, obj.getName());
             st.setString(2, obj.getEmail());
             st.setDate(3, new java.sql.Date(obj.getBirthDate().getTime()));
@@ -83,9 +84,10 @@ public class SellerDaoJDBC implements SellerDao {
         PreparedStatement st = null;
         try{
             st = conn.prepareStatement(
-                    "UPDATE seller\n"
-                            + "SET Id = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ?\n"
-                            + "WHERE Name = ?", Statement.RETURN_GENERATED_KEYS);
+                    """
+                            UPDATE seller
+                            SET Id = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ?
+                            WHERE Name = ?""", Statement.RETURN_GENERATED_KEYS);
             st.setInt(1, obj.getId());
             st.setString(2, obj.getEmail());
             st.setDate(3, new java.sql.Date(obj.getBirthDate().getTime()));
@@ -197,10 +199,11 @@ public class SellerDaoJDBC implements SellerDao {
         ResultSet rs = null;
         try{
             st = conn.prepareStatement(
-                    "SELECT seller.*,department.Name as DepName\n" +
-                            "FROM seller INNER JOIN department\n" +
-                            "ON seller.DepartmentId = department.Id\n" +
-                            "ORDER BY Name");
+                    """
+                            SELECT seller.*,department.Name as DepName
+                            FROM seller INNER JOIN department
+                            ON seller.DepartmentId = department.Id
+                            ORDER BY Name""");
 
             List<Seller> list = new ArrayList<>();
             Map<Integer, Department> map = new HashMap<>();
